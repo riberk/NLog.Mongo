@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="All">
+
+	
+	<PropertyGroup>
+		<LibraryPath>$(MSBuildProjectDirectory)\Library</LibraryPath>
+	</PropertyGroup>
+	<PropertyGroup>
+		<ConfigurationName Condition=" '$(ConfigurationName)' == '' ">Release</ConfigurationName>
+		<SourceDirectory>$(MSBuildProjectDirectory)</SourceDirectory>
+		<SolutionDirectory>$(SourceDirectory)\Solution</SolutionDirectory>
+		<SolutionFile>$(SourceDirectory)\Solution\NLog.Mongo.sln</SolutionFile>
+		<TargetDirectory>$(MSBuildProjectDirectory)\Target\$(ConfigurationName)</TargetDirectory>
+	</PropertyGroup>
+
+	<Target Name="All" DependsOnTargets="CreatePushers" />
+
+	<Target Name="Clean">
+		<RemoveDir Directories="$(TargetDirectory)" />
+	</Target>
+
+	<Target Name="Init" DependsOnTargets="Clean">
+		<MakeDir Directories="$(TargetDirectory)" />
+		<ReadLinesFromFile File="$(MSBuildProjectDirectory)\nuget-key" Condition=" '$(ApiKey)' == '' ">
+		    <Output TaskParameter="Lines" ItemName="FileApiKey" />
+		</ReadLinesFromFile>
+		<PropertyGroup>
+			<ApiKey Condition="'$(ApiKey)'==''">@(FileApiKey)</ApiKey>
+		</PropertyGroup>
+		<Exec command="nuget restore $(SolutionFile)"/>
+	</Target>
+
+	<Target Name="Build" DependsOnTargets="Init">
+		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(ConfigurationName)" Targets="Clean; Build" />
+	</Target>
+
+	<Target Name="NugetPack" DependsOnTargets="Build">
+		<ItemGroup>
+    		<NuspecFiles Include="$(SolutionDirectory)\*\*.nuspec"/>
+  		</ItemGroup>
+		<Exec command="nuget pack %(NuspecFiles.FullPath) -OutputDirectory $(TargetDirectory)"/>
+	</Target>
+	<Target Name="CreatePushers" DependsOnTargets="NugetPack">
+		<ItemGroup>
+			<NupkgFiles Include="$(TargetDirectory)\*"/>
+		</ItemGroup>
+		<Exec command="echo nuget push $(TargetDirectory)\%(NupkgFiles.FileName).nupkg $(ApiKey) -Source https://www.nuget.org/api/v2/package > $(TargetDirectory)\%(NupkgFiles.FileName).bat"/>
+		<Exec command="echo pause >> $(TargetDirectory)\%(NupkgFiles.FileName).bat"/>
+
+	</Target>
+</Project>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>NLog.MongoDbTarget</id>
+    <version>1.0.1</version>
+    <title>NLog.MongoDbTarget</title>
+    <authors>Pavel Kurdikov</authors>
+    <owners>Pavel Kurdikov</owners>
+    <licenseUrl>https://github.com/riberk/NLog.Mongo/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/riberk/NLog.Mongo</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>NLog target for NLog</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags></tags>
+    <dependencies>
+      <dependency id="MongoDB.Bson" version="[2.4.3, 3.0)" />
+      <dependency id="MongoDB.Driver" version="[2.4.3, 3.0)" />
+      <dependency id="MongoDB.Driver.Core" version="[2.4.3, 3.0)" />
+      <dependency id="NLog" version="[4.4.9, 5.0)" />
+      <dependency id="Ninject" version="[3.2.2.0, 4.0)" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\NLog.Mongo.dll" target="lib\net45" />
+  </files>
+</package>
