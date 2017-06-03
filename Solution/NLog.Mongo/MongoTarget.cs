@@ -6,6 +6,8 @@
     using JetBrains.Annotations;
     using NLog.Common;
     using NLog.Config;
+    using NLog.Mongo.Convert;
+    using NLog.Mongo.Di;
     using NLog.Mongo.Infrastructure;
     using NLog.Targets;
 
@@ -35,6 +37,10 @@
             _connectionStringRetriever = connectionStringRetriever;
             _eventsWriter = eventsWriter;
             _internalLogger = internalLogger;
+        }
+
+        public MongoTarget() : this(NlogMongoRegistry.ConnectionStringRetriever, NlogMongoRegistry.EventsWriter, NlogMongoRegistry.InternalLogger)
+        {
         }
 
         /// <summary>
