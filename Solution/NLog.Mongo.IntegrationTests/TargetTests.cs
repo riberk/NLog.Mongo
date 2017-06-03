@@ -4,8 +4,8 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Threading.Tasks;
-    using MongoDB.Bson;
     using MongoDB.Driver;
+    using NLog.Mongo.Models;
     using NUnit.Framework;
 
     [TestFixture]
@@ -111,47 +111,5 @@
             throw new ExternalException(ExceptionMessage, ErrorCode);
         }
 
-    }
-
-    public class LogEntry
-    {
-        public ObjectId Id { get; set; }
-
-        public DateTime? Date { get; set; }
-
-        public string Level { get; set; }
-
-        public string Logger { get; set; }
-
-        public string Message { get; set; }
-
-        public BsonDocument Properties { get; set; }
-
-        public LogException Exception { get; set; }
-
-        public string AnyText { get; set; }
-    }
-
-    public class LogException
-    {
-        public string Message { get; set; }
-
-        public string BaseMessage { get; set; }
-
-        public string Text { get; set; }
-
-        public string Type { get; set; }
-
-        public string Stack { get; set; }
-
-        public int? ErrorCode { get; set; }
-
-        public string Source { get; set; }
-
-        public string MethodName { get; set; }
-
-        public string ModuleName { get; set; }
-
-        public string ModuleVersion { get; set; }
     }
 }

@@ -84,6 +84,8 @@
     <Compile Include="Infrastructure\IMongoCollectionResolver.cs" />
     <Compile Include="Infrastructure\MongoCollectionResolver.cs" />
     <Compile Include="Internal\AsyncHelper.cs" />
+    <Compile Include="Models\LogEntry.cs" />
+    <Compile Include="Models\LogException.cs" />
     <Compile Include="MongoTarget.cs" />
     <Compile Include="Convert\BsonConverter.cs" />
     <Compile Include="MongoField.cs" />
