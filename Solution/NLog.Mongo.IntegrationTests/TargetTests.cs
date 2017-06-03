@@ -81,7 +81,6 @@
         public async Task WitException_WithoutEventProperties()
         {
             var logger = LogManager.GetLogger(LoggerName);
-            var logEventInfo = new LogEventInfo(LogLevel.Info, LoggerName, MessageText);
             try
             {
                 ThrowException();

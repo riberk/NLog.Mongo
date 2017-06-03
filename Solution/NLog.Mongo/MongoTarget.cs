@@ -31,8 +31,6 @@
             if (connectionStringRetriever == null) throw new ArgumentNullException(nameof(connectionStringRetriever));
             if (eventsWriter == null) throw new ArgumentNullException(nameof(eventsWriter));
             if (internalLogger == null) throw new ArgumentNullException(nameof(internalLogger));
-            Fields = new List<MongoField>();
-            Properties = new List<MongoField>();
             IncludeDefaults = true;
             _connectionStringRetriever = connectionStringRetriever;
             _eventsWriter = eventsWriter;
@@ -50,8 +48,8 @@
         ///     The fields.
         /// </value>
         [NotNull, ItemNotNull]
-        [ArrayParameter(typeof (MongoField), "field")]
-        public virtual IReadOnlyCollection<MongoField> Fields { get; }
+        [ArrayParameter(typeof(MongoField), "field")]
+        public virtual IReadOnlyCollection<MongoField> Fields { get; } = new List<MongoField>();
 
         /// <summary>
         ///     Gets the properties collection.
@@ -60,8 +58,8 @@
         ///     The properties.
         /// </value>
         [NotNull, ItemNotNull]
-        [ArrayParameter(typeof (MongoField), "property")]
-        public virtual IReadOnlyCollection<MongoField> Properties { get; }
+        [ArrayParameter(typeof(MongoField), "property")]
+        public virtual IReadOnlyCollection<MongoField> Properties { get; } = new List<MongoField>();
 
         /// <summary>
         ///     Gets or sets the connection string name string.
@@ -143,7 +141,9 @@
         protected override void Write(AsyncLogEventInfo[] logEvents)
         {
             if (logEvents == null || logEvents.Length == 0)
+            {
                 return;
+            }
 
             try
             {

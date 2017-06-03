@@ -3,6 +3,8 @@
     using System;
     using System.Linq;
     using JetBrains.Annotations;
+    using MongoDB.Bson;
+    using MongoDB.Driver;
     using NLog.Common;
     using NLog.Mongo.Internal;
 
