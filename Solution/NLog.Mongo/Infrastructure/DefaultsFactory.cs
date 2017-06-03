@@ -6,7 +6,7 @@
     using MongoDB.Bson;
     using NLog.Mongo.Convert;
 
-    public class DefaultsFactory : IDefaultsFactory
+    internal class DefaultsFactory : IDefaultsFactory
     {
         [NotNull] private readonly IBsonExceptionFactory _bsonExceptionFactory;
         [NotNull] private readonly IBsonStructConverter _bsonStructConverter;
