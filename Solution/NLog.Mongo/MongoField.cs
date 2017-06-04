@@ -70,9 +70,5 @@
         /// </value>
         [DefaultValue("String")]
         public string BsonType { get; [UsedImplicitly] private set; }
-
-        [NotNull, ItemNotNull]
-        [ArrayParameter(typeof(MongoIndex), "index")]
-        public IReadOnlyList<MongoIndex> Indexes { get; } =  new List<MongoIndex>();
     }
 }

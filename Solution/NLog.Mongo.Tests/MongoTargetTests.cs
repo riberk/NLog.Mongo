@@ -6,6 +6,7 @@
     using Moq;
     using NLog.Common;
     using NLog.Mongo.Infrastructure;
+    using NLog.Mongo.Infrastructure.Indexes;
 
     [TestFixture]
     public class MongoTargetTests
@@ -14,6 +15,8 @@
         private Mock<IEventsWriter> _eventsWriter;
         private Mock<MongoTarget.IInternalLogger> _internalLogger;
         private MockRepository _mockFactory;
+        private Mock<IIndexesFactory> _indexesFacory;
+        private Mock<IMongoCollectionResolver> _collectionResolver;
 
 
         [SetUp]
@@ -23,11 +26,13 @@
             _connectionStringRetriever = _mockFactory.Create<IConnectionStringRetriever>();
             _eventsWriter = _mockFactory.Create<IEventsWriter>();
             _internalLogger = _mockFactory.Create<MongoTarget.IInternalLogger>();
+            _indexesFacory = _mockFactory.Create<IIndexesFactory>();
+            _collectionResolver = _mockFactory.Create<IMongoCollectionResolver>();
         }
 
         private TestTarget Create()
         {
-            return new TestTarget(_connectionStringRetriever.Object, _eventsWriter.Object, _internalLogger.Object);
+            return new TestTarget(_connectionStringRetriever.Object, _eventsWriter.Object, _collectionResolver.Object, _indexesFacory.Object, _internalLogger.Object);
         }
 
         [Test]
@@ -196,7 +201,9 @@
             /// </summary>
             public TestTarget([NotNull] IConnectionStringRetriever connectionStringRetriever,
                               [NotNull] IEventsWriter eventsWriter,
-                              [NotNull] IInternalLogger internalLogger) : base(connectionStringRetriever, eventsWriter, internalLogger)
+                              IMongoCollectionResolver collectionResolver,
+                              IIndexesFactory factory,
+                              [NotNull] IInternalLogger internalLogger) : base(connectionStringRetriever, eventsWriter, factory, collectionResolver, internalLogger)
             {
             }
 

@@ -1,11 +1,86 @@
 ﻿namespace NLog.Mongo
 {
+    using System;
+    using System.Collections.Generic;
     using JetBrains.Annotations;
     using NLog.Config;
     using NLog.Layouts;
+    using NLog.Mongo.Infrastructure.Indexes;
+
+    public enum FieldIndexType
+    {
+        Ascending = 1,
+        Descending = 2,
+        GeoHaystack = 3,
+        Geo2D = 4,
+        Geo2DSphere = 5,
+        Hashed = 6,
+        Text = 7
+    }
+
+
+    public class MongoIndexField : IMongoIndexField
+    {
+        /// <summary>
+        ///     <seealso cref="FieldIndexType" />
+        /// </summary>
+        [RequiredParameter]
+        public string IndexType
+        {
+            get { return Type.ToString(); }
+            [UsedImplicitly]
+            private set
+            {
+                FieldIndexType t;
+                if (!Enum.TryParse(value, true, out t))
+                {
+                    throw new FormatException("Coud not parse index type");
+                }
+                Type = t;
+            }
+        }
+
+        [RequiredParameter]
+        public string Name { get; [UsedImplicitly] private set; }
+
+        public FieldIndexType Type { get; private set; }
+    }
 
     public class MongoIndex : IMongoIndexOptions
     {
+        [NotNull]
+        [ItemNotNull]
+        [ArrayParameter(typeof(MongoIndexField), "field")]
+        public IReadOnlyList<MongoIndexField> Fields { get; } = new List<MongoIndexField>();
+
+        /// <summary>
+        ///     <seealso cref="CreationBehaviour" />
+        /// </summary>
+        [RequiredParameter]
+        public string CreationBehaviour
+        {
+            get { return IndexCreationBehaviour.ToString(); }
+            [UsedImplicitly]
+            private set
+            {
+                CreationBehaviour t;
+                if (!Enum.TryParse(value, true, out t))
+                {
+                    throw new FormatException("Coud not parse index creation behaviour");
+                }
+                IndexCreationBehaviour = t;
+            }
+        }
+
+        /// <summary>Gets or sets the index name.</summary>
+        [NotNull]
+        [RequiredParameter]
+        public string Name { get; [UsedImplicitly] private set; }
+
+        public IReadOnlyList<IMongoIndexField> IndexFields => Fields;
+
+        public CreationBehaviour IndexCreationBehaviour { get; private set; }
+
         /// <summary>
         ///     Gets or sets a value indicating whether to create the index in the background.
         /// </summary>
@@ -20,7 +95,7 @@
         public double? BucketSize { get; [UsedImplicitly] private set; }
 
         //TODO Collation
-        //!!public Collation Collation { get; [UsedImplicitly] private set; }
+        //public Collation Collation { get; [UsedImplicitly] private set; }
 
         /// <summary>Gets or sets the default language.</summary>
         public string DefaultLanguage { get; [UsedImplicitly] private set; }
@@ -33,11 +108,6 @@
 
         /// <summary>Gets or sets the min value for 2d indexes.</summary>
         public double? Min { get; [UsedImplicitly] private set; }
-
-        /// <summary>Gets or sets the index name.</summary>
-        [NotNull]
-        [RequiredParameter]
-        public string Name { get; [UsedImplicitly] private set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether the index is a sparse index.
@@ -61,17 +131,8 @@
         /// <summary>Gets or sets the version of the index.</summary>
         public int? Version { get; [UsedImplicitly] private set; }
 
+
         //TODO Weights
         //public BsonDocument Weights { get; [UsedImplicitly] private set; }
-
-        /// <summary>
-        ///     Gets or sets the layout used to generate the value for the field.
-        /// </summary>
-        /// <value>
-        ///     The layout used to generate the value for the field.
-        /// </value>
-        [NotNull]
-        [RequiredParameter]
-        public Layout Layout { get; [UsedImplicitly] private set; }
     }
 }

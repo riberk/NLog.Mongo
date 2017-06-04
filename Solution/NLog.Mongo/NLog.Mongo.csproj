@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="IMongoCappedCollectionSettings.cs" />
     <Compile Include="IMongoConnectionSettings.cs" />
+    <Compile Include="IMongoIndexField.cs" />
     <Compile Include="IMongoIndexOptions.cs" />
     <Compile Include="IMongoSettings.cs" />
     <Compile Include="IMongoTarget.cs" />
@@ -83,7 +84,14 @@
     <Compile Include="Infrastructure\IBsonPropertiesFactory.cs" />
     <Compile Include="Infrastructure\IDefaultsFactory.cs" />
     <Compile Include="Infrastructure\IMongoCollectionResolver.cs" />
+    <Compile Include="Infrastructure\Indexes\CreateIndexesContext.cs" />
+    <Compile Include="Infrastructure\Indexes\CreationBehaviour.cs" />
     <Compile Include="Infrastructure\Indexes\IIndexesFactory.cs" />
+    <Compile Include="Infrastructure\Indexes\IIndexKeyFactory.cs" />
+    <Compile Include="Infrastructure\Indexes\IndexesFactory.cs" />
+    <Compile Include="Infrastructure\Indexes\IndexKeyFactory.cs" />
+    <Compile Include="Infrastructure\Indexes\IOptionsMapper.cs" />
+    <Compile Include="Infrastructure\Indexes\OptionsMapper.cs" />
     <Compile Include="Infrastructure\MongoCollectionResolver.cs" />
     <Compile Include="Internal\AsyncHelper.cs" />
     <Compile Include="Models\LogEntry.cs" />

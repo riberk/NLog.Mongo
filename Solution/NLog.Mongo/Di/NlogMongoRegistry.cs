@@ -5,6 +5,7 @@
     using JetBrains.Annotations;
     using NLog.Mongo.Convert;
     using NLog.Mongo.Infrastructure;
+    using NLog.Mongo.Infrastructure.Indexes;
 
     public static class NlogMongoRegistry
     {
@@ -54,6 +55,7 @@
                                         new MongoCollectionResolver.CollectionCreator(),
                                         new MongoCollectionResolver.MongoDatabaseFactory());
         [NotNull] internal static readonly IEventsWriter EventsWriter = new EventsWriter(BsonDocumentCreator, MongoCollectionResolver);
+        [NotNull] internal static readonly IIndexesFactory IndexesFactory = new IndexesFactory(new IndexKeyFactory(), new OptionsMapper());
 
 
 

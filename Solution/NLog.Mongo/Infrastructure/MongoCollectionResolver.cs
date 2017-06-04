@@ -10,8 +10,8 @@
 
     internal class MongoCollectionResolver : IMongoCollectionResolver
     {
-        [NotNull, ItemNotNull] private static readonly ConcurrentDictionary<string, IMongoCollection<BsonDocument>> CollectionCache =
-                new ConcurrentDictionary<string, IMongoCollection<BsonDocument>>();
+        [NotNull] private static readonly ConcurrentDictionary<string, IMongoCollection<BsonDocument>> CollectionCache =
+            new ConcurrentDictionary<string, IMongoCollection<BsonDocument>>();
 
         [NotNull] private readonly ICacheKeyFactory _cacheKeyFactory;
         [NotNull] private readonly ICollectionCreator _collectionCreator;
@@ -34,15 +34,16 @@
         {
             if (mongoTarget == null) throw new ArgumentNullException(nameof(mongoTarget));
             // ReSharper disable once AssignNullToNotNullAttribute
-            return CollectionCache.GetOrAdd(_cacheKeyFactory.Create(mongoTarget), k =>
-            {
-                var database = _mongoDatabaseFactory.Create(mongoTarget.ConnectionString);
-                if (database == null)
-                {
-                    throw new InvalidOperationException("Not found mongo db and can not create it");
-                }
-                return AsyncHelper.RunSync(() => _collectionCreator.CheckAndCreate(mongoTarget, database));
-            });
+            return CollectionCache.GetOrAdd(_cacheKeyFactory.Create(mongoTarget),
+                                            k =>
+                                            {
+                                                var database = _mongoDatabaseFactory.Create(mongoTarget.ConnectionString);
+                                                if (database == null)
+                                                {
+                                                    throw new InvalidOperationException("Not found mongo db and can not create it");
+                                                }
+                                                return AsyncHelper.RunSync(() => _collectionCreator.CheckAndCreate(mongoTarget, database));
+                                            });
         }
 
         internal interface IMongoDatabaseFactory
@@ -87,7 +88,8 @@
 
                     await database.CreateCollectionAsync(collectionName, options);
                 }
-                return database.GetCollection<BsonDocument>(collectionName);
+                var collection = database.GetCollection<BsonDocument>(collectionName);
+                return collection;
             }
 
             private static async Task<bool> CollectionExistsAsync([NotNull] IMongoDatabase database, [NotNull] string collectionName)
@@ -108,7 +110,8 @@
         {
             public string Create(IMongoConnectionSettings settings)
             {
-                return $"k|{settings.ConnectionName ?? string.Empty}|{settings.ConnectionString ?? string.Empty}|{settings.CollectionName ?? string.Empty}";
+                return
+                    $"k|{settings.ConnectionName ?? string.Empty}|{settings.ConnectionString ?? string.Empty}|{settings.CollectionName ?? string.Empty}";
             }
         }
     }
