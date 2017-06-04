@@ -1,7 +1,10 @@
 ﻿namespace NLog.Mongo
 {
     using System;
+    using System.Threading.Tasks;
     using JetBrains.Annotations;
+    using MongoDB.Bson;
+    using MongoDB.Driver;
     using NUnit.Framework;
     using Moq;
     using NLog.Common;
@@ -164,7 +167,14 @@
         {
             var testTarget = Create();
             testTarget.ConnectionString = "str";
+            var col = _mockFactory.Create<IMongoCollection<BsonDocument>>(MockBehavior.Strict);
+            _collectionResolver.Setup(x => x.GetCollection(testTarget)).Returns(col.Object).Verifiable();
+
+            _indexesFacory.Setup(x => x.Create(new CreateIndexesContext<BsonDocument>(testTarget.Indexes, col.Object)))
+                          .Returns(Task.CompletedTask)
+                          .Verifiable();
             testTarget.InitializeTargetImpl();
+
         }
 
         [Test]
@@ -184,6 +194,12 @@
             _connectionStringRetriever.Setup(x => x.GetConnectionString(connectionName)).Returns(connectionString);
 
             Assert.IsNull(testTarget.ConnectionString);
+            var col = _mockFactory.Create<IMongoCollection<BsonDocument>>(MockBehavior.Strict);
+            _collectionResolver.Setup(x => x.GetCollection(testTarget)).Returns(col.Object).Verifiable();
+
+            _indexesFacory.Setup(x => x.Create(new CreateIndexesContext<BsonDocument>(testTarget.Indexes, col.Object)))
+                          .Returns(Task.CompletedTask)
+                          .Verifiable();
             testTarget.InitializeTargetImpl();
             Assert.AreEqual(connectionString, testTarget.ConnectionString);
         }
