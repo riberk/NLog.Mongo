@@ -11,10 +11,8 @@ namespace NLog.Mongo.Infrastructure.Indexes
         public CreateIndexesContext([NotNull] IReadOnlyCollection<IMongoIndexOptions> indexes,
                                     [NotNull] IMongoCollection<T> collection)
         {
-            if (indexes == null) throw new ArgumentNullException(nameof(indexes));
-            if (collection == null) throw new ArgumentNullException(nameof(collection));
-            Indexes = indexes;
-            Collection = collection;
+            Indexes = indexes ?? throw new ArgumentNullException(nameof(indexes));
+            Collection = collection ?? throw new ArgumentNullException(nameof(collection));
         }
 
         [NotNull]
