@@ -6,7 +6,7 @@
     using MongoDB.Bson;
     using NLog.Mongo.Convert;
 
-    public class DefaultsFactory : IDefaultsFactory
+    internal class DefaultsFactory : IDefaultsFactory
     {
         [NotNull] private readonly IBsonExceptionFactory _bsonExceptionFactory;
         [NotNull] private readonly IBsonStructConverter _bsonStructConverter;
@@ -17,10 +17,8 @@
         public DefaultsFactory([NotNull] IBsonStructConverter bsonStructConverter,
                                [NotNull] IBsonExceptionFactory bsonExceptionFactory)
         {
-            if (bsonStructConverter == null) throw new ArgumentNullException(nameof(bsonStructConverter));
-            if (bsonExceptionFactory == null) throw new ArgumentNullException(nameof(bsonExceptionFactory));
-            _bsonStructConverter = bsonStructConverter;
-            _bsonExceptionFactory = bsonExceptionFactory;
+            _bsonStructConverter = bsonStructConverter ?? throw new ArgumentNullException(nameof(bsonStructConverter));
+            _bsonExceptionFactory = bsonExceptionFactory ?? throw new ArgumentNullException(nameof(bsonExceptionFactory));
         }
 
         public IEnumerable<KeyValuePair<string, BsonValue>> Create(LogEventInfo logEvent)

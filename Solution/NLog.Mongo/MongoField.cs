@@ -1,5 +1,6 @@
 ﻿namespace NLog.Mongo
 {
+    using System.Collections.Generic;
     using System.ComponentModel;
     using JetBrains.Annotations;
     using NLog.Config;
@@ -49,7 +50,7 @@
         /// </value>
         [NotNull]
         [RequiredParameter]
-        public string Name { get; set; }
+        public string Name { get; [UsedImplicitly] private set; }
 
         /// <summary>
         ///     Gets or sets the layout used to generate the value for the field.
@@ -59,7 +60,7 @@
         /// </value>
         [NotNull]
         [RequiredParameter]
-        public Layout Layout { get; set; }
+        public Layout Layout { get; [UsedImplicitly] private set; }
 
         /// <summary>
         ///     Gets or sets the bson type of the field. Possible values are Boolean, DateTime, Double, Int32, Int64 and String
@@ -67,8 +68,7 @@
         /// <value>
         ///     The bson type of the field..
         /// </value>
-        [NotNull]
         [DefaultValue("String")]
-        public string BsonType { get; set; }
+        public string BsonType { get; [UsedImplicitly] private set; }
     }
 }

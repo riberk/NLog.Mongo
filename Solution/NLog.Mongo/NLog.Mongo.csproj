@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NLog.Mongo</RootNamespace>
     <AssemblyName>NLog.Mongo</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -21,7 +21,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +29,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="JetBrains.Annotations, Version=10.4.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
@@ -49,19 +47,18 @@
       <HintPath>..\packages\MongoDB.Driver.Core.2.4.3\lib\net45\MongoDB.Driver.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.9\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.4.10\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FieldIndexType.cs" />
     <Compile Include="IMongoCappedCollectionSettings.cs" />
     <Compile Include="IMongoConnectionSettings.cs" />
+    <Compile Include="IMongoIndexField.cs" />
+    <Compile Include="IMongoIndexOptions.cs" />
     <Compile Include="IMongoSettings.cs" />
     <Compile Include="IMongoTarget.cs" />
     <Compile Include="IMongoWriteSettings.cs" />
@@ -86,12 +83,24 @@
     <Compile Include="Infrastructure\IBsonPropertiesFactory.cs" />
     <Compile Include="Infrastructure\IDefaultsFactory.cs" />
     <Compile Include="Infrastructure\IMongoCollectionResolver.cs" />
+    <Compile Include="Infrastructure\Indexes\CreateIndexesContext.cs" />
+    <Compile Include="Infrastructure\Indexes\CreationBehaviour.cs" />
+    <Compile Include="Infrastructure\Indexes\IIndexesFactory.cs" />
+    <Compile Include="Infrastructure\Indexes\IIndexKeyFactory.cs" />
+    <Compile Include="Infrastructure\Indexes\IndexesFactory.cs" />
+    <Compile Include="Infrastructure\Indexes\IndexKeyFactory.cs" />
+    <Compile Include="Infrastructure\Indexes\IOptionsMapper.cs" />
+    <Compile Include="Infrastructure\Indexes\OptionsMapper.cs" />
     <Compile Include="Infrastructure\MongoCollectionResolver.cs" />
     <Compile Include="Internal\AsyncHelper.cs" />
+    <Compile Include="Models\LogEntry.cs" />
+    <Compile Include="Models\LogException.cs" />
+    <Compile Include="MongoIndex.cs" />
+    <Compile Include="MongoIndexField.cs" />
     <Compile Include="MongoTarget.cs" />
     <Compile Include="Convert\BsonConverter.cs" />
     <Compile Include="MongoField.cs" />
-    <Compile Include="Ninject\NlogMongoModule.cs" />
+    <Compile Include="Di\NlogMongoRegistry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -100,11 +109,4 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

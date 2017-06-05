@@ -20,12 +20,9 @@
                                      [NotNull] IBsonDocumentValueAppender bsonDocumentValueAppender,
                                      [NotNull] IBsonStructConverter bsonStructConverter)
         {
-            if (bsonConverter == null) throw new ArgumentNullException(nameof(bsonConverter));
-            if (bsonDocumentValueAppender == null) throw new ArgumentNullException(nameof(bsonDocumentValueAppender));
-            if (bsonStructConverter == null) throw new ArgumentNullException(nameof(bsonStructConverter));
-            _bsonConverter = bsonConverter;
-            _bsonDocumentValueAppender = bsonDocumentValueAppender;
-            _bsonStructConverter = bsonStructConverter;
+            _bsonConverter = bsonConverter ?? throw new ArgumentNullException(nameof(bsonConverter));
+            _bsonDocumentValueAppender = bsonDocumentValueAppender ?? throw new ArgumentNullException(nameof(bsonDocumentValueAppender));
+            _bsonStructConverter = bsonStructConverter ?? throw new ArgumentNullException(nameof(bsonStructConverter));
         }
 
         public BsonValue Create(IEnumerable<MongoField> props, LogEventInfo logEvent)

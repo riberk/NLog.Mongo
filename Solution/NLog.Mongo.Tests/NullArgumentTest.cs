@@ -5,22 +5,20 @@
     using System.Linq;
     using System.Reflection;
     using JetBrains.Annotations;
-    using NUnit.Framework;
     using Moq;
-    using TsSoft.Expressions.Helpers.Reflection;
+    using NUnit.Framework;
 
     public class ArgumentsVerifier
     {
-        [NotNull]
-        private readonly Dictionary<Type, ConstructorInfo[]> _constructors;
-        [NotNull]
-        private readonly MethodInfo _createMockMethod;
-        [NotNull]
-        private readonly List<string> _errors;
-        [NotNull]
-        private readonly MockRepository _mockFactory;
-        [NotNull]
-        private readonly List<ConstructorInfo> _ctorsWithoutParameters;
+        [NotNull] private readonly Dictionary<Type, ConstructorInfo[]> _constructors;
+
+        [NotNull] private readonly MethodInfo _createMockMethod;
+
+        [NotNull] private readonly List<ConstructorInfo> _ctorsWithoutParameters;
+
+        [NotNull] private readonly List<string> _errors;
+
+        [NotNull] private readonly MockRepository _mockFactory;
 
         public ArgumentsVerifier(IEnumerable<Type> types)
         {
@@ -32,9 +30,11 @@
                 {
                     Type = x,
                     Constructors = x.GetConstructors()
-                        .Where(c => c.GetParameters().All(p => p.ParameterType.IsReferenceType() && p.ParameterType != typeof(string)))
-                        .ToArray()
-                }).Where(x => x.Constructors.Any())
+                                    .Where(c => c.GetParameters()
+                                                 .All(p => IsReferenceType(p.ParameterType) && p.ParameterType != typeof(string)))
+                                    .ToArray()
+                })
+                .Where(x => x.Constructors.Any())
                 .ToDictionary(x => x.Type, x => x.Constructors);
             _ctorsWithoutParameters = types.SelectMany(x => x.GetConstructors()).Where(x => !x.GetParameters().Any()).ToList();
             _createMockMethod = typeof(MockRepository).GetMethod("Create", new Type[0]);
@@ -42,6 +42,19 @@
 
         [NotNull]
         public IReadOnlyCollection<string> Errors => _errors;
+
+        public static bool IsReferenceType(Type t)
+        {
+            if (t == null)
+            {
+                return false;
+            }
+            if (!t.IsClass)
+            {
+                return t.IsInterface;
+            }
+            return true;
+        }
 
         [NotNull]
         public ArgumentsVerifier CheckAllCtorsWithoutParametersCreateObject()
@@ -78,9 +91,9 @@
                 .MakeGenericMethod(type)
                 .Invoke(_mockFactory, new object[0]);
             var mockObject = mock.GetType()
-                .GetProperties()
-                .Single(pp => pp.Name == "Object" && pp.DeclaringType == mock.GetType())
-                .GetValue(mock);
+                                 .GetProperties()
+                                 .Single(pp => pp.Name == "Object" && pp.DeclaringType == mock.GetType())
+                                 .GetValue(mock);
             return mockObject;
         }
 
@@ -91,28 +104,29 @@
             {
                 var args = mi.GetParameters();
                 var dict = args.ToDictionary(
-                    x => x,
-                    parameterInfo =>
-                    {
-                        try
-                        {
-                            return CreateObject(parameterInfo.ParameterType);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new AggregateException(
-                                $"Exception on create mock for {mi.DeclaringType} constructor {mi} with parameter {parameterInfo}",
-                                e);
-                        }
-                    });
+                                             x => x,
+                                             parameterInfo =>
+                                             {
+                                                 try
+                                                 {
+                                                     return CreateObject(parameterInfo.ParameterType);
+                                                 }
+                                                 catch (Exception e)
+                                                 {
+                                                     throw new AggregateException(
+                                                                                  $"Exception on create mock for {mi.DeclaringType} constructor {mi} with parameter {parameterInfo}",
+                                                                                  e);
+                                                 }
+                                             });
                 foreach (var source in dict)
                 {
                     var p = args.Select(x =>
-                    {
-                        if (source.Key == x) return null;
-                        var s = dict[x];
-                        return s;
-                    }).ToArray();
+                                {
+                                    if (source.Key == x) return null;
+                                    var s = dict[x];
+                                    return s;
+                                })
+                                .ToArray();
                     try
                     {
                         mi.Invoke(p);
@@ -148,8 +162,7 @@
 
         public class ArgumentsVerifierBuilder
         {
-            [NotNull]
-            private readonly HashSet<Type> _allTypes;
+            [NotNull] private readonly HashSet<Type> _allTypes;
 
             public ArgumentsVerifierBuilder(Type assemblyType)
             {
@@ -179,7 +192,7 @@
         [Test]
         public void AllNullArgumentThrow()
         {
-            var res = ArgumentsVerifier.Builder(typeof (MongoTarget))
+            var res = ArgumentsVerifier.Builder(typeof(MongoTarget))
                                        .ToVerifier()
                                        .CheckAllCtorsWithoutParametersCreateObject()
                                        .CheckNullArgumentsOnConstructors()
