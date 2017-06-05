@@ -11,7 +11,7 @@
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (value != null && value != BsonNull.Value)
             {
-                document.Add(name, value);
+                document.Add(name.Replace(".", @"_"), value);
             }
         }
     }
