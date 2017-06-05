@@ -4,11 +4,14 @@
     using System.Collections.Generic;
     using System.Threading;
     using JetBrains.Annotations;
+    using MongoDB.Bson;
     using NLog.Common;
     using NLog.Config;
     using NLog.Mongo.Convert;
     using NLog.Mongo.Di;
     using NLog.Mongo.Infrastructure;
+    using NLog.Mongo.Infrastructure.Indexes;
+    using NLog.Mongo.Internal;
     using NLog.Targets;
 
     /// <summary>
@@ -19,6 +22,8 @@
     {
         [NotNull] private readonly IConnectionStringRetriever _connectionStringRetriever;
         [NotNull] private readonly IEventsWriter _eventsWriter;
+        [NotNull] private readonly IIndexesFactory _indexesFactory;
+        [NotNull] private readonly IMongoCollectionResolver _mongoCollectionResolver;
         [NotNull] private readonly IInternalLogger _internalLogger;
 
         /// <summary>
@@ -26,20 +31,24 @@
         /// </summary>
         public MongoTarget([NotNull] IConnectionStringRetriever connectionStringRetriever,
                            [NotNull] IEventsWriter eventsWriter,
+                           [NotNull] IIndexesFactory indexesFactory,
+                           [NotNull] IMongoCollectionResolver mongoCollectionResolver,
                            [NotNull] IInternalLogger internalLogger)
         {
-            if (connectionStringRetriever == null) throw new ArgumentNullException(nameof(connectionStringRetriever));
-            if (eventsWriter == null) throw new ArgumentNullException(nameof(eventsWriter));
-            if (internalLogger == null) throw new ArgumentNullException(nameof(internalLogger));
-            Fields = new List<MongoField>();
-            Properties = new List<MongoField>();
             IncludeDefaults = true;
-            _connectionStringRetriever = connectionStringRetriever;
-            _eventsWriter = eventsWriter;
-            _internalLogger = internalLogger;
+            _connectionStringRetriever = connectionStringRetriever ?? throw new ArgumentNullException(nameof(connectionStringRetriever));
+            _eventsWriter = eventsWriter ?? throw new ArgumentNullException(nameof(eventsWriter));
+            _indexesFactory = indexesFactory ?? throw new ArgumentNullException(nameof(indexesFactory));
+            _mongoCollectionResolver = mongoCollectionResolver ?? throw new ArgumentNullException(nameof(mongoCollectionResolver));
+            _internalLogger = internalLogger ?? throw new ArgumentNullException(nameof(internalLogger));
         }
 
-        public MongoTarget() : this(NlogMongoRegistry.ConnectionStringRetriever, NlogMongoRegistry.EventsWriter, NlogMongoRegistry.InternalLogger)
+        public MongoTarget() : this(
+            NlogMongoRegistry.ConnectionStringRetriever, 
+            NlogMongoRegistry.EventsWriter,
+            NlogMongoRegistry.IndexesFactory,
+            NlogMongoRegistry.MongoCollectionResolver,
+            NlogMongoRegistry.InternalLogger)
         {
         }
 
@@ -50,8 +59,8 @@
         ///     The fields.
         /// </value>
         [NotNull, ItemNotNull]
-        [ArrayParameter(typeof (MongoField), "field")]
-        public virtual IReadOnlyCollection<MongoField> Fields { get; }
+        [ArrayParameter(typeof(MongoField), "field")]
+        public virtual IReadOnlyCollection<MongoField> Fields { get; } = new List<MongoField>();
 
         /// <summary>
         ///     Gets the properties collection.
@@ -60,8 +69,18 @@
         ///     The properties.
         /// </value>
         [NotNull, ItemNotNull]
-        [ArrayParameter(typeof (MongoField), "property")]
-        public virtual IReadOnlyCollection<MongoField> Properties { get; }
+        [ArrayParameter(typeof(MongoField), "property")]
+        public virtual IReadOnlyCollection<MongoField> Properties { get; } = new List<MongoField>();
+
+        /// <summary>
+        ///     Gets the properties collection.
+        /// </summary>
+        /// <value>
+        ///     The properties.
+        /// </value>
+        [NotNull, ItemNotNull]
+        [ArrayParameter(typeof(MongoIndex), "index")]
+        public virtual IReadOnlyCollection<MongoIndex> Indexes { get; } = new List<MongoIndex>();
 
         /// <summary>
         ///     Gets or sets the connection string name string.
@@ -124,14 +143,21 @@
             base.InitializeTarget();
             if (!string.IsNullOrWhiteSpace(ConnectionString))
             {
-                return;
             }
-            if (string.IsNullOrEmpty(ConnectionName))
+            else if (string.IsNullOrEmpty(ConnectionName))
             {
                 throw new NLogConfigurationException(
-                        "Can not resolve MongoDB ConnectionString. Please make sure the ConnectionString property is set.");
+                                                     "Can not resolve MongoDB ConnectionString. Please make sure the ConnectionString property is set.");
             }
-            ConnectionString = _connectionStringRetriever.GetConnectionString(ConnectionName);
+            else
+            {
+                ConnectionString = _connectionStringRetriever.GetConnectionString(ConnectionName);
+            }
+            AsyncHelper.RunSync(async () =>
+            {
+                var collection = _mongoCollectionResolver.GetCollection(this);
+                await _indexesFactory.Create(new CreateIndexesContext<BsonDocument>(Indexes, collection));
+            });
         }
 
         /// <summary>
@@ -143,7 +169,9 @@
         protected override void Write(AsyncLogEventInfo[] logEvents)
         {
             if (logEvents == null || logEvents.Length == 0)
+            {
                 return;
+            }
 
             try
             {

@@ -14,10 +14,8 @@
 
         public BsonConverter([NotNull] IBsonStructConverter bsonStructConverter, [NotNull] IBsonStructConvertMethodFactory bsonStructConvertMethodFactory)
         {
-            if (bsonStructConverter == null) throw new ArgumentNullException(nameof(bsonStructConverter));
-            if (bsonStructConvertMethodFactory == null) throw new ArgumentNullException(nameof(bsonStructConvertMethodFactory));
-            _bsonStructConverter = bsonStructConverter;
-            _bsonStructConvertMethodFactory = bsonStructConvertMethodFactory;
+            _bsonStructConverter = bsonStructConverter ?? throw new ArgumentNullException(nameof(bsonStructConverter));
+            _bsonStructConvertMethodFactory = bsonStructConvertMethodFactory ?? throw new ArgumentNullException(nameof(bsonStructConvertMethodFactory));
         }
 
         public BsonValue GetValue(MongoField field, LogEventInfo logEvent)

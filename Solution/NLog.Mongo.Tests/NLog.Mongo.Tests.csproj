@@ -26,7 +26,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +34,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -87,10 +85,15 @@
     <Compile Include="Infrastructure\ConnectionStringRetrieverTests.cs" />
     <Compile Include="Infrastructure\DefaultsFactoryTests.cs" />
     <Compile Include="Infrastructure\EventsWriterTests.cs" />
+    <Compile Include="Infrastructure\Indexes\IndexesFactoryTests.cs" />
+    <Compile Include="Infrastructure\Indexes\IndexKeyFactoryTests.cs" />
+    <Compile Include="Infrastructure\Indexes\OptionsMapperTests.cs" />
     <Compile Include="Infrastructure\MongoCollectionResolverTests.cs" />
     <Compile Include="Infrastructure\MongoDatabaseFactoryTests.cs" />
     <Compile Include="InternalLoggerImplTests.cs" />
     <Compile Include="MongoFieldTests.cs" />
+    <Compile Include="MongoIndexFieldTests.cs" />
+    <Compile Include="MongoIndexTests.cs" />
     <Compile Include="MongoTargetTests.cs" />
     <Compile Include="NullArgumentTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

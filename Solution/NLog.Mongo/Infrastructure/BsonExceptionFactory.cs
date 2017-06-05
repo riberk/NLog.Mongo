@@ -16,10 +16,8 @@
         /// </summary>
         public BsonExceptionFactory([NotNull] IBsonDocumentValueAppender bsonDocumentValueAppender, [NotNull] IBsonStructConverter bsonStructConverter)
         {
-            if (bsonDocumentValueAppender == null) throw new ArgumentNullException(nameof(bsonDocumentValueAppender));
-            if (bsonStructConverter == null) throw new ArgumentNullException(nameof(bsonStructConverter));
-            _bsonDocumentValueAppender = bsonDocumentValueAppender;
-            _bsonStructConverter = bsonStructConverter;
+            _bsonDocumentValueAppender = bsonDocumentValueAppender ?? throw new ArgumentNullException(nameof(bsonDocumentValueAppender));
+            _bsonStructConverter = bsonStructConverter ?? throw new ArgumentNullException(nameof(bsonStructConverter));
         }
 
         public BsonValue Create(Exception exception)
