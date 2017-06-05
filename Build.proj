@@ -9,7 +9,8 @@
 		<ConfigurationName Condition=" '$(ConfigurationName)' == '' ">Release</ConfigurationName>
 		<SourceDirectory>$(MSBuildProjectDirectory)</SourceDirectory>
 		<SolutionDirectory>$(SourceDirectory)\Solution</SolutionDirectory>
-		<SolutionFile>$(SourceDirectory)\Solution\NLog.Mongo.sln</SolutionFile>
+		<FullFrameworkSolutionFile>$(SourceDirectory)\Solution\NLog.Mongo.sln</FullFrameworkSolutionFile>
+		<NetStandardSolutionFile>$(SourceDirectory)\Solution\NLog.Mongo.Core.sln</NetStandardSolutionFile>
 		<TargetDirectory>$(MSBuildProjectDirectory)\Target\$(ConfigurationName)</TargetDirectory>
 	</PropertyGroup>
 
@@ -27,11 +28,13 @@
 		<PropertyGroup>
 			<ApiKey Condition="'$(ApiKey)'==''">@(FileApiKey)</ApiKey>
 		</PropertyGroup>
-		<Exec command="nuget restore $(SolutionFile)"/>
+		<Exec command="nuget restore $(FullFrameworkSolutionFile)"/>
+		<Exec command="nuget restore $(NetStandardSolutionFile)"/>
 	</Target>
 
 	<Target Name="Build" DependsOnTargets="Init">
-		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(ConfigurationName)" Targets="Clean; Build" />
+		<MSBuild Projects="$(FullFrameworkSolutionFile)" Properties="Configuration=$(ConfigurationName)" Targets="Clean; Build" />
+		<MSBuild Projects="$(NetStandardSolutionFile)" Properties="Configuration=$(ConfigurationName)" Targets="Clean; Build" />
 	</Target>
 
 	<Target Name="NugetPack" DependsOnTargets="Build">

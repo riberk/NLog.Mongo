@@ -3,7 +3,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>NLog.MongoDbTarget</id>
-    <version>1.0.1</version>
+    <version>2.0.0-beta01</version>
     <title>NLog.MongoDbTarget</title>
     <authors>Pavel Kurdikov</authors>
     <owners>Pavel Kurdikov</owners>
@@ -15,13 +15,18 @@
     <copyright>Copyright 2017</copyright>
     <tags></tags>
     <dependencies>
-      <dependency id="MongoDB.Bson" version="[2.4.3, 3.0)" />
-      <dependency id="MongoDB.Driver" version="[2.4.3, 3.0)" />
-      <dependency id="MongoDB.Driver.Core" version="[2.4.3, 3.0)" />
-      <dependency id="NLog" version="[4.4.10, 5.0)" />
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="MongoDB.Driver" version="[2.4.3, 3.0)" />
+        <dependency id="NLog" version="[4.4.10, 6.0)" />
+      </group>
+      <group targetFramework=".NETStandard1.5">
+        <dependency id="MongoDB.Driver" version="[2.4.3, 3.0)" />
+        <dependency id="NLog" version="[5.0.0-beta07, 6.0)" />
+      </group>
     </dependencies>
   </metadata>
   <files>
     <file src="bin\Release\NLog.Mongo.dll" target="lib\net45" />
+    <file src="bin\Release\netstandard1.5\NLog.Mongo.dll" target="lib\netstandard1.5" />
   </files>
 </package>
