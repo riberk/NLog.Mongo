@@ -5,7 +5,7 @@
     using NLog.Mongo.Infrastructure;
     using NLog.Mongo.Infrastructure.Indexes;
 
-    public static class NlogMongoRegistry
+    internal static class NlogMongoRegistry
     {
         [NotNull] internal static readonly MongoTarget.IInternalLogger InternalLogger = new MongoTarget.InternalLoggerImpl();
         [NotNull] internal static readonly IConnectionStringRetriever ConnectionStringRetriever = new ConnectionStringRetriever();

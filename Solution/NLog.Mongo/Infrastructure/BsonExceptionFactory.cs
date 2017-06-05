@@ -32,16 +32,19 @@
             _bsonDocumentValueAppender.Append(document, "Text", _bsonStructConverter.BsonString(exception.ToString()));
             _bsonDocumentValueAppender.Append(document, "Type", _bsonStructConverter.BsonString(exception.GetType().ToString()));
             _bsonDocumentValueAppender.Append(document, "Stack", _bsonStructConverter.BsonString(exception.StackTrace));
+            _bsonDocumentValueAppender.Append(document, "Source", _bsonStructConverter.BsonString(exception.Source));
 
-
+#if !CORE
             var external = exception as ExternalException;
             if (external != null)
             {
                 _bsonDocumentValueAppender.Append(document, "ErrorCode", new BsonInt32(external.ErrorCode));
             }
+#else
+            _bsonDocumentValueAppender.Append(document, "ErrorCode", new BsonInt32(exception.HResult));
+#endif
 
-            _bsonDocumentValueAppender.Append(document, "Source", _bsonStructConverter.BsonString(exception.Source));
-
+#if !CORE
             var method = exception.TargetSite;
             if (method != null)
             {
@@ -51,6 +54,7 @@
                 _bsonDocumentValueAppender.Append(document, "ModuleName", _bsonStructConverter.BsonString(assembly.Name));
                 _bsonDocumentValueAppender.Append(document, "ModuleVersion", _bsonStructConverter.BsonString(assembly.Version?.ToString()));
             }
+#endif
 
             return document;
         }

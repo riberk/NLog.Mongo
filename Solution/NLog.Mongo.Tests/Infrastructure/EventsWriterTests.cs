@@ -45,8 +45,8 @@
         [Test]
         public void WriteTest()
         {
-            var e1 = new LogEventInfo();
-            var e2 = new LogEventInfo();
+            var e1 = new LogEventInfo(LogLevel.Debug, "E1Logger", "message1");
+            var e2 = new LogEventInfo(LogLevel.Error, "E2Logger", "message2");
             var events = new AsyncLogEventInfo[]
             {
                 new AsyncLogEventInfo(e1, null),

@@ -149,7 +149,7 @@
                 new AsyncLogEventInfo()
             };
             var testTarget = Create();
-            var exception = new StackOverflowException();
+            var exception = new OutOfMemoryException();
             _eventsWriter.Setup(x => x.Write(events, testTarget)).Throws(exception).Verifiable();
             try
             {

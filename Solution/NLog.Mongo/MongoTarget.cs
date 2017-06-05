@@ -183,7 +183,11 @@
                 }
             }
             catch (Exception ex)
-                    when (!(ex is StackOverflowException || ex is ThreadAbortException || ex is OutOfMemoryException || ex is NLogConfigurationException))
+                    when (!(
+#if !CORE
+                    ex is StackOverflowException || ex is ThreadAbortException || 
+#endif
+                    ex is OutOfMemoryException || ex is NLogConfigurationException))
             {
                 _internalLogger.Error("Error when writing to MongoDB {0}", ex);
                 foreach (var ev in logEvents)

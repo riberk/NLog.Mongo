@@ -31,6 +31,7 @@
         
         private async Task<LogEntry> AssertCommon(string level)
         {
+            System.Diagnostics.Debug.WriteLine(typeof(MongoTarget).AssemblyQualifiedName);
             using (var cursor = await _collection.FindAsync(x => true))
             {
                 Assert.IsTrue(await cursor.MoveNextAsync());
@@ -97,7 +98,7 @@
             Assert.AreEqual(ExceptionMessage, entry.Exception.Message);
             Assert.AreEqual(ErrorCode, entry.Exception.ErrorCode);
             Assert.IsNotNull(entry.Exception.Stack);
-            Assert.IsNotNull(typeof(ExternalException).ToString(), entry.Exception.Type);
+            Assert.IsNotNull(typeof(MyException).ToString(), entry.Exception.Type);
         }
 
         [Test]
@@ -128,7 +129,16 @@
 
         private static void ThrowExceptionTrace()
         {
-            throw new ExternalException(ExceptionMessage, ErrorCode);
+            throw new MyException(ExceptionMessage, ErrorCode);
+        }
+
+        private class MyException : Exception
+        {
+            public MyException(string msg, int hresult) : base(msg)
+            {
+                HResult = hresult;
+            }
+
         }
 
     }

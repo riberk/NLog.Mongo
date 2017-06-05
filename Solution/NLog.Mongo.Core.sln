@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLog.Mongo.Core", "NLog.Mongo\NLog.Mongo.Core.csproj", "{E03B2689-438D-4809-99E0-887248745FC5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLog.Mongo.Tests.Core", "NLog.Mongo.Tests\NLog.Mongo.Tests.Core.csproj", "{3E7843F8-4124-4510-BC22-1E191A8CF6EF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLog.Mongo.IntegrationTests.Core", "NLog.Mongo.IntegrationTests\NLog.Mongo.IntegrationTests.Core.csproj", "{C7B46E26-B97B-45AE-89A0-7494E44652BA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E03B2689-438D-4809-99E0-887248745FC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E03B2689-438D-4809-99E0-887248745FC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E03B2689-438D-4809-99E0-887248745FC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E03B2689-438D-4809-99E0-887248745FC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E7843F8-4124-4510-BC22-1E191A8CF6EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E7843F8-4124-4510-BC22-1E191A8CF6EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E7843F8-4124-4510-BC22-1E191A8CF6EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E7843F8-4124-4510-BC22-1E191A8CF6EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7B46E26-B97B-45AE-89A0-7494E44652BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7B46E26-B97B-45AE-89A0-7494E44652BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7B46E26-B97B-45AE-89A0-7494E44652BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7B46E26-B97B-45AE-89A0-7494E44652BA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
