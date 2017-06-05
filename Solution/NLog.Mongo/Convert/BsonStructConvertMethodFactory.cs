@@ -11,8 +11,7 @@
 
         public BsonStructConvertMethodFactory([NotNull] IBsonStructConverter converter)
         {
-            if (converter == null) throw new ArgumentNullException(nameof(converter));
-            _converter = converter;
+            _converter = converter ?? throw new ArgumentNullException(nameof(converter));
         }
 
         public BsonTryConvertMethod Create(BsonType type)

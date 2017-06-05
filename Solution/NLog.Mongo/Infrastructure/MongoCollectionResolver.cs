@@ -21,12 +21,9 @@
                                        [NotNull] ICollectionCreator collectionCreator,
                                        [NotNull] IMongoDatabaseFactory mongoDatabaseFactory)
         {
-            if (cacheKeyFactory == null) throw new ArgumentNullException(nameof(cacheKeyFactory));
-            if (collectionCreator == null) throw new ArgumentNullException(nameof(collectionCreator));
-            if (mongoDatabaseFactory == null) throw new ArgumentNullException(nameof(mongoDatabaseFactory));
-            _cacheKeyFactory = cacheKeyFactory;
-            _collectionCreator = collectionCreator;
-            _mongoDatabaseFactory = mongoDatabaseFactory;
+            _cacheKeyFactory = cacheKeyFactory ?? throw new ArgumentNullException(nameof(cacheKeyFactory));
+            _collectionCreator = collectionCreator ?? throw new ArgumentNullException(nameof(collectionCreator));
+            _mongoDatabaseFactory = mongoDatabaseFactory ?? throw new ArgumentNullException(nameof(mongoDatabaseFactory));
         }
 
         [NotNull]

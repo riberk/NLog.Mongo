@@ -7,44 +7,6 @@
     using NLog.Layouts;
     using NLog.Mongo.Infrastructure.Indexes;
 
-    public enum FieldIndexType
-    {
-        Ascending = 1,
-        Descending = 2,
-        GeoHaystack = 3,
-        Geo2D = 4,
-        Geo2DSphere = 5,
-        Hashed = 6,
-        Text = 7
-    }
-
-
-    public class MongoIndexField : IMongoIndexField
-    {
-        /// <summary>
-        ///     <seealso cref="FieldIndexType" />
-        /// </summary>
-        [RequiredParameter]
-        public string IndexType
-        {
-            get { return Type.ToString(); }
-            [UsedImplicitly]
-            private set
-            {
-                FieldIndexType t;
-                if (!Enum.TryParse(value, true, out t))
-                {
-                    throw new FormatException("Coud not parse index type");
-                }
-                Type = t;
-            }
-        }
-
-        [RequiredParameter]
-        public string Name { get; [UsedImplicitly] private set; }
-
-        public FieldIndexType Type { get; private set; }
-    }
 
     public class MongoIndex : IMongoIndexOptions
     {
@@ -73,7 +35,6 @@
         }
 
         /// <summary>Gets or sets the index name.</summary>
-        [NotNull]
         [RequiredParameter]
         public string Name { get; [UsedImplicitly] private set; }
 

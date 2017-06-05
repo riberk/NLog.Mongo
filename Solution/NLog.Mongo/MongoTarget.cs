@@ -35,17 +35,12 @@
                            [NotNull] IMongoCollectionResolver mongoCollectionResolver,
                            [NotNull] IInternalLogger internalLogger)
         {
-            if (connectionStringRetriever == null) throw new ArgumentNullException(nameof(connectionStringRetriever));
-            if (eventsWriter == null) throw new ArgumentNullException(nameof(eventsWriter));
-            if (indexesFactory == null) throw new ArgumentNullException(nameof(indexesFactory));
-            if (mongoCollectionResolver == null) throw new ArgumentNullException(nameof(mongoCollectionResolver));
-            if (internalLogger == null) throw new ArgumentNullException(nameof(internalLogger));
             IncludeDefaults = true;
-            _connectionStringRetriever = connectionStringRetriever;
-            _eventsWriter = eventsWriter;
-            _indexesFactory = indexesFactory;
-            _mongoCollectionResolver = mongoCollectionResolver;
-            _internalLogger = internalLogger;
+            _connectionStringRetriever = connectionStringRetriever ?? throw new ArgumentNullException(nameof(connectionStringRetriever));
+            _eventsWriter = eventsWriter ?? throw new ArgumentNullException(nameof(eventsWriter));
+            _indexesFactory = indexesFactory ?? throw new ArgumentNullException(nameof(indexesFactory));
+            _mongoCollectionResolver = mongoCollectionResolver ?? throw new ArgumentNullException(nameof(mongoCollectionResolver));
+            _internalLogger = internalLogger ?? throw new ArgumentNullException(nameof(internalLogger));
         }
 
         public MongoTarget() : this(

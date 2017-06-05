@@ -100,6 +100,27 @@
             Assert.IsNotNull(typeof(ExternalException).ToString(), entry.Exception.Type);
         }
 
+        [Test]
+        public void IndexesTest()
+        {
+            const string customPropIdxName = "CustomPropIdx";
+            const string dateIdIdxName = "Date_Id_Idx";
+            // ReSharper disable once UnusedVariable
+            var logger = LogManager.GetLogger(LoggerName);
+            using (var cursor = _collection.Indexes.List())
+            {
+                Assert.IsTrue(cursor.MoveNext());
+                var indexes = cursor.Current.ToDictionary(x => x["name"], x => x);
+                Assert.IsTrue(indexes.ContainsKey(dateIdIdxName));
+                var dateIdKey = indexes[dateIdIdxName]["key"];
+                Assert.AreEqual(1, dateIdKey["Date"].AsInt32);
+                Assert.AreEqual(1, dateIdKey["_id"].AsInt32);
+                Assert.IsTrue(indexes.ContainsKey(customPropIdxName));
+                var customPropIdKey = indexes[customPropIdxName]["key"];
+                Assert.AreEqual(-1, customPropIdKey["Properties.Prop"].AsInt32);
+            }
+        }
+
         private static void ThrowException()
         {
             ThrowExceptionTrace();

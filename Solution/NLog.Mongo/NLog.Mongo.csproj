@@ -54,6 +54,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FieldIndexType.cs" />
     <Compile Include="IMongoCappedCollectionSettings.cs" />
     <Compile Include="IMongoConnectionSettings.cs" />
     <Compile Include="IMongoIndexField.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Models\LogEntry.cs" />
     <Compile Include="Models\LogException.cs" />
     <Compile Include="MongoIndex.cs" />
+    <Compile Include="MongoIndexField.cs" />
     <Compile Include="MongoTarget.cs" />
     <Compile Include="Convert\BsonConverter.cs" />
     <Compile Include="MongoField.cs" />

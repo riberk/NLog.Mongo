@@ -14,10 +14,8 @@ namespace NLog.Mongo.Infrastructure.Indexes
 
         public IndexesFactory([NotNull] IIndexKeyFactory indexKeyFactory, [NotNull] IOptionsMapper optionsMapper)
         {
-            if (indexKeyFactory == null) throw new ArgumentNullException(nameof(indexKeyFactory));
-            if (optionsMapper == null) throw new ArgumentNullException(nameof(optionsMapper));
-            _indexKeyFactory = indexKeyFactory;
-            _optionsMapper = optionsMapper;
+            _indexKeyFactory = indexKeyFactory ?? throw new ArgumentNullException(nameof(indexKeyFactory));
+            _optionsMapper = optionsMapper ?? throw new ArgumentNullException(nameof(optionsMapper));
         }
 
         public async Task Create<T>(CreateIndexesContext<T> context)
@@ -25,11 +23,14 @@ namespace NLog.Mongo.Infrastructure.Indexes
             HashSet<string> existsIndexes;
             using (var indexesCursor = await context.Collection.Indexes.ListAsync())
             {
-                if (!await indexesCursor.MoveNextAsync())
+                if (await indexesCursor.MoveNextAsync())
                 {
-                    return;
+                    existsIndexes = new HashSet<string>(indexesCursor.Current.Select(x => x["name"].AsString));
                 }
-                existsIndexes = new HashSet<string>(indexesCursor.Current.Select(x => x["name"].AsString));
+                else
+                {
+                    existsIndexes = new HashSet<string>();
+                }
             }
             var creatingIndexes = new List<CreateIndexModel<T>>();
             var replacingIndexes = new List<string>();

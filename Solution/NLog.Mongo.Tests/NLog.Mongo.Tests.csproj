@@ -85,10 +85,15 @@
     <Compile Include="Infrastructure\ConnectionStringRetrieverTests.cs" />
     <Compile Include="Infrastructure\DefaultsFactoryTests.cs" />
     <Compile Include="Infrastructure\EventsWriterTests.cs" />
+    <Compile Include="Infrastructure\Indexes\IndexesFactoryTests.cs" />
+    <Compile Include="Infrastructure\Indexes\IndexKeyFactoryTests.cs" />
+    <Compile Include="Infrastructure\Indexes\OptionsMapperTests.cs" />
     <Compile Include="Infrastructure\MongoCollectionResolverTests.cs" />
     <Compile Include="Infrastructure\MongoDatabaseFactoryTests.cs" />
     <Compile Include="InternalLoggerImplTests.cs" />
     <Compile Include="MongoFieldTests.cs" />
+    <Compile Include="MongoIndexFieldTests.cs" />
+    <Compile Include="MongoIndexTests.cs" />
     <Compile Include="MongoTargetTests.cs" />
     <Compile Include="NullArgumentTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

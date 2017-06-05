@@ -19,14 +19,10 @@
                                    [NotNull] IDefaultsFactory defaultsFactory,
                                    [NotNull] IBsonPropertiesFactory bsonPropertiesFactory)
         {
-            if (bsonDocumentValueAppender == null) throw new ArgumentNullException(nameof(bsonDocumentValueAppender));
-            if (bsonConverter == null) throw new ArgumentNullException(nameof(bsonConverter));
-            if (defaultsFactory == null) throw new ArgumentNullException(nameof(defaultsFactory));
-            if (bsonPropertiesFactory == null) throw new ArgumentNullException(nameof(bsonPropertiesFactory));
-            _bsonDocumentValueAppender = bsonDocumentValueAppender;
-            _bsonConverter = bsonConverter;
-            _defaultsFactory = defaultsFactory;
-            _bsonPropertiesFactory = bsonPropertiesFactory;
+            _bsonDocumentValueAppender = bsonDocumentValueAppender ?? throw new ArgumentNullException(nameof(bsonDocumentValueAppender));
+            _bsonConverter = bsonConverter ?? throw new ArgumentNullException(nameof(bsonConverter));
+            _defaultsFactory = defaultsFactory ?? throw new ArgumentNullException(nameof(defaultsFactory));
+            _bsonPropertiesFactory = bsonPropertiesFactory ?? throw new ArgumentNullException(nameof(bsonPropertiesFactory));
         }
 
         public BsonDocument CreateDocument(LogEventInfo logEvent,

@@ -16,10 +16,8 @@
 
         public EventsWriter([NotNull] IBsonDocumentCreator bsonDocumentCreator, [NotNull] IMongoCollectionResolver mongoCollectionResolver)
         {
-            if (bsonDocumentCreator == null) throw new ArgumentNullException(nameof(bsonDocumentCreator));
-            if (mongoCollectionResolver == null) throw new ArgumentNullException(nameof(mongoCollectionResolver));
-            _bsonDocumentCreator = bsonDocumentCreator;
-            _mongoCollectionResolver = mongoCollectionResolver;
+            _bsonDocumentCreator = bsonDocumentCreator ?? throw new ArgumentNullException(nameof(bsonDocumentCreator));
+            _mongoCollectionResolver = mongoCollectionResolver ?? throw new ArgumentNullException(nameof(mongoCollectionResolver));
         }
 
         public void Write(AsyncLogEventInfo[] logEvents, IMongoTarget target)
