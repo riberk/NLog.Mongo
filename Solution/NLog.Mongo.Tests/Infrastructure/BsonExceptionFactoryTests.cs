@@ -53,12 +53,9 @@
             var bType = _mockFactory.Create<BsonValue>(MockBehavior.Loose);
             var bStack = _mockFactory.Create<BsonValue>(MockBehavior.Loose);
             var bSource = _mockFactory.Create<BsonValue>(MockBehavior.Loose);
-            var bMethodName = _mockFactory.Create<BsonValue>(MockBehavior.Loose);
-            var bModuleName = _mockFactory.Create<BsonValue>(MockBehavior.Loose);
-            var bModuleVersion = _mockFactory.Create<BsonValue>(MockBehavior.Loose);
 
-            var assembly = ex.TargetSite.Module.Assembly.GetName();
-            var version = assembly.Version?.ToString();
+
+
 
             _structConverter.Setup(x => x.BsonString(ex.Message)).Returns(bMessage.Object).Verifiable();
             _structConverter.Setup(x => x.BsonString(ex.GetBaseException().Message)).Returns(bBaseMessage.Object).Verifiable();
@@ -66,9 +63,8 @@
             _structConverter.Setup(x => x.BsonString(ex.GetType().ToString())).Returns(bType.Object).Verifiable();
             _structConverter.Setup(x => x.BsonString(ex.StackTrace)).Returns(bStack.Object).Verifiable();
             _structConverter.Setup(x => x.BsonString(ex.Source)).Returns(bSource.Object).Verifiable();
-            _structConverter.Setup(x => x.BsonString(ex.TargetSite.Name)).Returns(bMethodName.Object).Verifiable();
-            _structConverter.Setup(x => x.BsonString(assembly.Name)).Returns(bModuleName.Object).Verifiable();
-            _structConverter.Setup(x => x.BsonString(version)).Returns(bModuleVersion.Object).Verifiable();
+
+
 
 
             _valueAppender.Setup(x => x.Append(It.IsAny<BsonDocument>(), "Message", bMessage.Object)).Verifiable();
@@ -76,13 +72,33 @@
             _valueAppender.Setup(x => x.Append(It.IsAny<BsonDocument>(), "Text", bText.Object)).Verifiable();
             _valueAppender.Setup(x => x.Append(It.IsAny<BsonDocument>(), "Type", bType.Object)).Verifiable();
             _valueAppender.Setup(x => x.Append(It.IsAny<BsonDocument>(), "Stack", bStack.Object)).Verifiable();
-            _valueAppender.Setup(x => x.Append(It.IsAny<BsonDocument>(), "ErrorCode", It.IsAny<BsonValue>()))
-                          .Callback((BsonDocument bd, string s, BsonValue v) => Assert.AreEqual(ex.ErrorCode, v.AsInt32))
-                          .Verifiable();
             _valueAppender.Setup(x => x.Append(It.IsAny<BsonDocument>(), "Source", bSource.Object)).Verifiable();
+            _valueAppender.Setup(x => x.Append(It.IsAny<BsonDocument>(), "ErrorCode", It.IsAny<BsonValue>()))
+                          .Callback((BsonDocument bd, string s, BsonValue v) => Assert.AreEqual(
+#if CORE
+                              ex.HResult,
+#else
+                              ex.ErrorCode, 
+#endif
+                              v.AsInt32))
+                          .Verifiable();
+#if !CORE
+
+            var bMethodName = _mockFactory.Create<BsonValue>(MockBehavior.Loose);
+            var bModuleName = _mockFactory.Create<BsonValue>(MockBehavior.Loose);
+            var bModuleVersion = _mockFactory.Create<BsonValue>(MockBehavior.Loose);
+
             _valueAppender.Setup(x => x.Append(It.IsAny<BsonDocument>(), "MethodName", bMethodName.Object)).Verifiable();
             _valueAppender.Setup(x => x.Append(It.IsAny<BsonDocument>(), "ModuleName", bModuleName.Object)).Verifiable();
             _valueAppender.Setup(x => x.Append(It.IsAny<BsonDocument>(), "ModuleVersion", bModuleVersion.Object)).Verifiable();
+
+
+            var assembly = ex.TargetSite.Module.Assembly.GetName();
+            var version = assembly.Version?.ToString();
+            _structConverter.Setup(x => x.BsonString(ex.TargetSite.Name)).Returns(bMethodName.Object).Verifiable();
+            _structConverter.Setup(x => x.BsonString(assembly.Name)).Returns(bModuleName.Object).Verifiable();
+            _structConverter.Setup(x => x.BsonString(version)).Returns(bModuleVersion.Object).Verifiable();
+#endif
 
 
             var actual = Create().Create(ex) as BsonDocument;
@@ -94,7 +110,12 @@
             _mockFactory.VerifyAll();
         }
 
-        public class TestException : ExternalException
+        public class TestException
+#if !CORE
+            : ExternalException
+#else
+            : Exception
+#endif
         {
             /// <summary>
             ///     Инициализирует новый экземпляр класса <see cref="T:System.Exception" /> с указанным сообщением об ошибке и ссылкой
@@ -113,7 +134,11 @@
                 Message = message;
                 Source = source;
                 StackTrace = stackTrace;
+#if CORE
+                HResult = errorCode;
+#else
                 ErrorCode = errorCode;
+#endif
             }
 
             /// <summary>
@@ -164,13 +189,6 @@
             /// </PermissionSet>
             public override string StackTrace { get; }
 
-            /// <summary>
-            ///     Получает значение HRESULT ошибки.
-            /// </summary>
-            /// <returns>
-            ///     Значение HRESULT ошибки.
-            /// </returns>
-            public override int ErrorCode { get; }
 
             /// <summary>
             ///     При переопределении в производном классе возвращает исключение <see cref="T:System.Exception" />, которое является
@@ -186,35 +204,16 @@
                 return base.GetBaseException();
             }
 
-            /// <summary>
-            ///     При переопределении в производном классе задает объект
-            ///     <see cref="T:System.Runtime.Serialization.SerializationInfo" /> со сведениями об исключении.
-            /// </summary>
-            /// <param name="info">
-            ///     Объект <see cref="T:System.Runtime.Serialization.SerializationInfo" />, содержащий сериализованные
-            ///     данные объекта о созданном исключении.
-            /// </param>
-            /// <param name="context">
-            ///     Объект <see cref="T:System.Runtime.Serialization.StreamingContext" />, содержащий контекстные
-            ///     сведения об источнике или назначении.
-            /// </param>
-            /// <exception cref="T:System.ArgumentNullException">
-            ///     The <paramref name="info" /> parameter is a null reference (Nothing in
-            ///     Visual Basic).
-            /// </exception>
-            /// <PermissionSet>
-            ///     <IPermission
-            ///         class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
-            ///         version="1" Read="*AllFiles*" PathDiscovery="*AllFiles*" />
-            ///     <IPermission
-            ///         class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
-            ///         version="1" Flags="SerializationFormatter" />
-            /// </PermissionSet>
+#if !CORE
+            
             public override void GetObjectData(SerializationInfo info, StreamingContext context)
             {
                 base.GetObjectData(info, context);
             }
 
+            public override int ErrorCode { get; }
+
+#endif
             /// <summary>
             ///     Создает и возвращает строковое представление текущего исключения.
             /// </summary>

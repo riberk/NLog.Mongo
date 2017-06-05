@@ -13,7 +13,8 @@
         {
             const string fieldName = "123dad";
             var indexKeyFactory = new IndexKeyFactory();
-            foreach (var fieldIndexType in typeof(FieldIndexType).GetEnumValues().Cast<FieldIndexType>())
+            
+            foreach (var fieldIndexType in Enum.GetValues(typeof(FieldIndexType)).Cast<FieldIndexType>())
             {
                 indexKeyFactory.Create<BsonDocument>(fieldIndexType, fieldName);
             }

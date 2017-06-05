@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+  	<DefineConstants>CORE</DefineConstants>
+  	<AssemblyName>NLog.Mongo</AssemblyName>
+  	<RootNamespace>NLog.Mongo</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.4.3" />
+    <PackageReference Include="NLog" Version="5.0.0-beta07" />
+  </ItemGroup>
+</Project>

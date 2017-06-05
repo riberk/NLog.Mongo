@@ -24,7 +24,8 @@
         {
             if (logEvents == null) throw new ArgumentNullException(nameof(logEvents));
             if (target == null) throw new ArgumentNullException(nameof(target));
-            var documents = logEvents.Select(e => _bsonDocumentCreator.CreateDocument(e.LogEvent, target.Fields, target.Properties, target.IncludeDefaults));
+            var documents = logEvents.Select(e => _bsonDocumentCreator.CreateDocument(e.LogEvent, target.Fields, target.Properties, target.IncludeDefaults))
+                .ToList();
             var collection = _mongoCollectionResolver.GetCollection(target);
             AsyncHelper.RunSync(() => collection.InsertManyAsync(documents));
         }
