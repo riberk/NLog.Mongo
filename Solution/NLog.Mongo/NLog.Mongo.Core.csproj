@@ -1,16 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard1.5</TargetFramework>
-  	<DefineConstants>CORE</DefineConstants>
-  	<AssemblyName>NLog.Mongo</AssemblyName>
-  	<RootNamespace>NLog.Mongo</RootNamespace>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DefineConstants>CORE</DefineConstants>
+    <AssemblyName>NLog.Mongo</AssemblyName>
+    <RootNamespace>NLog.Mongo</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.4.3" />
-    <PackageReference Include="NLog" Version="5.0.0-beta07" />
+    <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.6.1" />
+    <PackageReference Include="NLog" Version="4.5.6" />
   </ItemGroup>
 </Project>
