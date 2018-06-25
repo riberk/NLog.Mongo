@@ -1,19 +1,17 @@
-﻿namespace NLog.Mongo
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using JetBrains.Annotations;
-    using MongoDB.Bson;
-    using NLog.Common;
-    using NLog.Config;
-    using NLog.Mongo.Convert;
-    using NLog.Mongo.Di;
-    using NLog.Mongo.Infrastructure;
-    using NLog.Mongo.Infrastructure.Indexes;
-    using NLog.Mongo.Internal;
-    using NLog.Targets;
+﻿using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
+using MongoDB.Bson;
+using NLog.Common;
+using NLog.Config;
+using NLog.Mongo.Di;
+using NLog.Mongo.Infrastructure;
+using NLog.Mongo.Infrastructure.Indexes;
+using NLog.Mongo.Internal;
+using NLog.Targets;
 
+namespace NLog.Mongo
+{
     /// <summary>
     ///     NLog message target for MongoDB.
     /// </summary>
@@ -122,22 +120,8 @@
         /// </value>
         public virtual long? CappedCollectionSize { get; set; }
 
-        /// <summary>
-        ///     Gets or sets the capped collection max items.
-        /// </summary>
-        /// <value>
-        ///     The capped collection max items.
-        /// </value>
         public virtual long? CappedCollectionMaxItems { get; set; }
 
-        /// <summary>
-        ///     Initializes the target. Can be used by inheriting classes
-        ///     to initialize logging.
-        /// </summary>
-        /// <exception cref="NLog.NLogConfigurationException">
-        ///     Can not resolve MongoDB ConnectionString. Please make sure the
-        ///     ConnectionString property is set.
-        /// </exception>
         protected override void InitializeTarget()
         {
             base.InitializeTarget();
@@ -160,15 +144,11 @@
             });
         }
 
-        /// <summary>
-        ///     Writes an array of logging events to the log target. By default it iterates on all
-        ///     events and passes them to "Write" method. Inheriting classes can use this method to
-        ///     optimize batch writes.
-        /// </summary>
-        /// <param name="logEvents">Logging events to be written out.</param>
-        protected override void Write(AsyncLogEventInfo[] logEvents)
+        
+        
+        protected override void Write(IList<AsyncLogEventInfo> logEvents)
         {
-            if (logEvents == null || logEvents.Length == 0)
+            if (logEvents == null || logEvents.Count == 0)
             {
                 return;
             }

@@ -1,15 +1,18 @@
-﻿namespace NLog.Mongo
+﻿using System.Collections.Generic;
+using System;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using NUnit.Framework;
+using Moq;
+using NLog.Common;
+using NLog.Mongo.Infrastructure;
+using NLog.Mongo.Infrastructure.Indexes;
+
+namespace NLog.Mongo
 {
-    using System;
-    using System.Threading.Tasks;
-    using JetBrains.Annotations;
-    using MongoDB.Bson;
-    using MongoDB.Driver;
-    using NUnit.Framework;
-    using Moq;
-    using NLog.Common;
-    using NLog.Mongo.Infrastructure;
-    using NLog.Mongo.Infrastructure.Indexes;
+
 
     [TestFixture]
     public class MongoTargetTests
@@ -86,20 +89,23 @@
         {
             var firstExecuted = false;
             var secondExecuted = false;
-            AsyncContinuation firstContinuation = exception =>
+
+            void FirstContinuation(Exception exception)
             {
                 Assert.IsNull(exception);
                 firstExecuted = true;
-            };
-            AsyncContinuation secondContinuation = exception =>
+            }
+
+            void SecondContinuation(Exception exception)
             {
                 Assert.IsNull(exception);
                 secondExecuted = true;
-            };
+            }
+
             var events = new[]
             {
-                new AsyncLogEventInfo(new LogEventInfo(), firstContinuation),
-                new AsyncLogEventInfo(new LogEventInfo(), secondContinuation),
+                new AsyncLogEventInfo(new LogEventInfo(), FirstContinuation),
+                new AsyncLogEventInfo(new LogEventInfo(), SecondContinuation),
             };
             var testTarget = Create();
             _eventsWriter.Setup(x => x.Write(events, testTarget)).Verifiable();
@@ -116,20 +122,23 @@
             var firstExecuted = false;
             var secondExecuted = false;
             var exception = new Exception("Message");
-            AsyncContinuation firstContinuation = e =>
+
+            void FirstContinuation(Exception e)
             {
                 Assert.AreEqual(exception, e);
                 firstExecuted = true;
-            };
-            AsyncContinuation secondContinuation = e =>
+            }
+
+            void SecondContinuation(Exception e)
             {
                 Assert.AreEqual(exception, e);
                 secondExecuted = true;
-            };
+            }
+
             var events = new[]
             {
-                new AsyncLogEventInfo(new LogEventInfo(), firstContinuation),
-                new AsyncLogEventInfo(new LogEventInfo(), secondContinuation),
+                new AsyncLogEventInfo(new LogEventInfo(), FirstContinuation),
+                new AsyncLogEventInfo(new LogEventInfo(), SecondContinuation),
             };
             var testTarget = Create();
             _eventsWriter.Setup(x => x.Write(events, testTarget)).Throws(exception).Verifiable();
@@ -224,7 +233,7 @@
             }
 
 
-            public void WriteAsync(AsyncLogEventInfo[] logEvents)
+            public void WriteAsync(IList<AsyncLogEventInfo> logEvents)
             {
                 Write(logEvents);
             }

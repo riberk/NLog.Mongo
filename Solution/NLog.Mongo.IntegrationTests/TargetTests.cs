@@ -1,13 +1,12 @@
-﻿namespace NLog.Mongo.IntegrationTests
-{
-    using System;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Threading.Tasks;
-    using MongoDB.Driver;
-    using NLog.Mongo.Models;
-    using NUnit.Framework;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using MongoDB.Driver;
+using NLog.Mongo.Models;
+using NUnit.Framework;
 
+namespace NLog.Mongo
+{
     [TestFixture]
     public class TargetTests
     {
@@ -28,7 +27,7 @@
             _collection = db.GetCollection<LogEntry>("Logs");
         }
 
-        
+
         private async Task<LogEntry> AssertCommon(string level)
         {
             System.Diagnostics.Debug.WriteLine(typeof(MongoTarget).AssemblyQualifiedName);
@@ -138,8 +137,6 @@
             {
                 HResult = hresult;
             }
-
         }
-
     }
 }

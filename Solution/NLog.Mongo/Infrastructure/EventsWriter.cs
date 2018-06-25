@@ -1,4 +1,6 @@
-﻿namespace NLog.Mongo.Infrastructure
+﻿using System.Collections.Generic;
+
+namespace NLog.Mongo.Infrastructure
 {
     using System;
     using System.Linq;
@@ -20,7 +22,7 @@
             _mongoCollectionResolver = mongoCollectionResolver ?? throw new ArgumentNullException(nameof(mongoCollectionResolver));
         }
 
-        public void Write(AsyncLogEventInfo[] logEvents, IMongoTarget target)
+        public void Write(IEnumerable<AsyncLogEventInfo> logEvents, IMongoTarget target)
         {
             if (logEvents == null) throw new ArgumentNullException(nameof(logEvents));
             if (target == null) throw new ArgumentNullException(nameof(target));

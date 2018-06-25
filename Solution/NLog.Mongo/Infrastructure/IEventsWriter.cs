@@ -1,10 +1,13 @@
-﻿namespace NLog.Mongo.Infrastructure
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
+using NLog.Common;
+
+namespace NLog.Mongo.Infrastructure
 {
-    using JetBrains.Annotations;
-    using NLog.Common;
+    
 
     public interface IEventsWriter
     {
-        void Write([NotNull] AsyncLogEventInfo[] logEvents, [NotNull] IMongoTarget target);
+        void Write([NotNull] IEnumerable<AsyncLogEventInfo> logEvents, [NotNull] IMongoTarget target);
     }
 }

@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLog.Mongo.Tests.Core", "NL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLog.Mongo.IntegrationTests.Core", "NLog.Mongo.IntegrationTests\NLog.Mongo.IntegrationTests.Core.csproj", "{C7B46E26-B97B-45AE-89A0-7494E44652BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polygon.Core.Web", "Polygon.Core.Web\Polygon.Core.Web.csproj", "{34632501-F435-4982-8E3B-FF780BEF8FCD}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{C7B46E26-B97B-45AE-89A0-7494E44652BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7B46E26-B97B-45AE-89A0-7494E44652BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7B46E26-B97B-45AE-89A0-7494E44652BA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34632501-F435-4982-8E3B-FF780BEF8FCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34632501-F435-4982-8E3B-FF780BEF8FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34632501-F435-4982-8E3B-FF780BEF8FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34632501-F435-4982-8E3B-FF780BEF8FCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
